@@ -613,7 +613,12 @@
         <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">📊 Dashboard</a>
         <a href="/portal/patients/" class="nav-link {% if '/portal/patients/' in request.path %}active{% endif %}">👤 Patients & QR Cards</a>
         <a href="/portal/appointments/" class="nav-link {% if '/portal/appointments/' in request.path %}active{% endif %}">📅 Appointments</a>
-        <a href="/portal/notifications/" class="nav-link {% if '/portal/notifications/' in request.path %}active{% endif %}">🔔 Notifications</a>
+        <a href="/portal/opd-tokens/" class="nav-link {% if '/portal/opd-tokens/' in request.path %}active{% endif %}">🎫 OPD Queue Tokens</a>
+        <a href="/portal/notifications/" class="nav-link {% if '/portal/notifications/' in request.path %}active{% endif %}">🔔 Notifications 센터</a>
+
+        <div class="nav-section-label">DOCTORS & SCHEDULING</div>
+        <a href="/portal/doctor-schedules/" class="nav-link {% if '/portal/doctor-schedules/' in request.path %}active{% endif %}">🗓️ Working Schedules</a>
+        <a href="/portal/doctor-leaves/" class="nav-link {% if '/portal/doctor-leaves/' in request.path %}active{% endif %}">🏖️ Leave Requests</a>
 
         <div class="nav-section-label">EMERGENCY & BLOOD BANK</div>
         <a href="/portal/emergency-cases/" class="nav-link {% if '/portal/emergency-cases/' in request.path %}active{% endif %}">🚨 Emergency Triage</a>
@@ -623,9 +628,13 @@
         <a href="/portal/blood-units/" class="nav-link {% if '/portal/blood-units/' in request.path %}active{% endif %}">📦 Blood Inventory</a>
         <a href="/portal/blood-requests/" class="nav-link {% if '/portal/blood-requests/' in request.path %}active{% endif %}">💉 Blood Requests</a>
 
-        <div class="nav-section-label">CLINICAL & IPD</div>
+        <div class="nav-section-label">CLINICAL & RADIOLOGY</div>
         <a href="/portal/encounters/" class="nav-link {% if '/portal/encounters/' in request.path %}active{% endif %}">📝 Medical Records</a>
         <a href="/portal/vitals/" class="nav-link {% if '/portal/vitals/' in request.path %}active{% endif %}">🩺 Nursing Vitals</a>
+        <a href="/portal/nursing-notes/" class="nav-link {% if '/portal/nursing-notes/' in request.path %}active{% endif %}">📋 Shift Notes</a>
+        <a href="/portal/medication-logs/" class="nav-link {% if '/portal/medication-logs/' in request.path %}active{% endif %}">💊 Medication Logs</a>
+        <a href="/portal/radiology/" class="nav-link {% if '/portal/radiology/' in request.path %}active{% endif %}">🩻 Radiology & Imaging</a>
+        <a href="/portal/patient-documents/" class="nav-link {% if '/portal/patient-documents/' in request.path %}active{% endif %}">📁 Document Vault</a>
         <a href="/portal/prescriptions/" class="nav-link {% if '/portal/prescriptions/' in request.path %}active{% endif %}">💊 E-Prescriptions</a>
         <a href="/portal/consents/" class="nav-link {% if '/portal/consents/' in request.path %}active{% endif %}">📄 Patient Consents</a>
         <a href="/portal/admissions/" class="nav-link {% if '/portal/admissions/' in request.path %}active{% endif %}">🏥 IPD Admissions</a>
@@ -640,12 +649,14 @@
         <a href="/portal/suppliers/" class="nav-link {% if '/portal/suppliers/' in request.path %}active{% endif %}">🏭 Suppliers</a>
         <a href="/portal/purchase-orders/" class="nav-link {% if '/portal/purchase-orders/' in request.path %}active{% endif %}">📦 Purchase Orders</a>
 
-        <div class="nav-section-label">FINANCE & SETUP</div>
+        <div class="nav-section-label">FINANCE & SYSTEM SETUP</div>
         <a href="/portal/invoices/" class="nav-link {% if '/portal/invoices/' in request.path %}active{% endif %}">🧾 Billing & GST</a>
         <a href="/portal/payments/" class="nav-link {% if '/portal/payments/' in request.path %}active{% endif %}">💳 Payment Receipts</a>
+        <a href="/portal/payment-transactions/" class="nav-link {% if '/portal/payment-transactions/' in request.path %}active{% endif %}">🌐 Payment Gateways</a>
         <a href="/portal/insurance-claims/" class="nav-link {% if '/portal/insurance-claims/' in request.path %}active{% endif %}">🛡️ Insurance / TPA</a>
-        <a href="/portal/reports/" class="nav-link {% if '/portal/reports/' in request.path %}active{% endif %}">📈 Analytics & Reports</a>
-        <a href="/portal/departments/" class="nav-link {% if '/portal/departments/' in request.path %}active{% endif %}">🏢 Departments</a>
+        <a href="/portal/analytics/" class="nav-link {% if '/portal/analytics/' in request.path %}active{% endif %}">📈 Chart Analytics</a>
+        <a href="/portal/profile/" class="nav-link {% if '/portal/profile/' in request.path %}active{% endif %}">👤 User Profile</a>
+        <a href="/api/docs/" target="_blank" class="nav-link">📖 Swagger API Docs</a>
         <a href="/admin/" class="nav-link">⚙️ Django Admin</a>
       </nav>
     </aside>

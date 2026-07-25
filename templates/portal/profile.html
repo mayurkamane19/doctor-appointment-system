@@ -1,0 +1,76 @@
+{% extends "portal/base.html" %}
+
+{% block title %}User Profile & Security - CarePoint HMS{% endblock %}
+{% block heading %}My Account & Security Profile{% endblock %}
+{% block subheading %}Manage personal information, role details, and security credentials{% endblock %}
+
+{% block content %}
+<div class="grid grid-2">
+  <div class="card">
+    <h3 style="margin-bottom: 16px; font-size: 1.125rem; font-weight: 700;">Account Details</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="update_profile" value="1">
+      
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">Username</label>
+        <input type="text" class="form-control" value="{{ user.username }}" disabled>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">System Role</label>
+        <input type="text" class="form-control" value="{{ user.get_role_display }}" disabled>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">First Name</label>
+        <input type="text" name="first_name" class="form-control" value="{{ user.first_name }}">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">Last Name</label>
+        <input type="text" name="last_name" class="form-control" value="{{ user.last_name }}">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">Email Address</label>
+        <input type="email" name="email" class="form-control" value="{{ user.email }}">
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">Phone Number</label>
+        <input type="text" name="phone" class="form-control" value="{{ user.phone }}">
+      </div>
+
+      <button type="submit" class="btn primary">Save Profile Changes</button>
+    </form>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom: 16px; font-size: 1.125rem; font-weight: 700;">Security & Credentials</h3>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="change_password" value="1">
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">Current Password</label>
+        <input type="password" name="old_password" class="form-control" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 14px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">New Password</label>
+        <input type="password" name="new_password" class="form-control" required>
+      </div>
+
+      <div class="form-group" style="margin-bottom: 20px;">
+        <label style="font-size: 0.875rem; font-weight: 600;">Two-Factor Authentication (2FA)</label>
+        <div style="padding: 12px; background: var(--bg); border: 1px solid var(--line); border-radius: 8px; font-size: 0.875rem;">
+          <span style="color: #10b981; font-weight: 600;">● Enabled via Email & SMS OTP</span>
+        </div>
+      </div>
+
+      <button type="submit" class="btn secondary">Change Password</button>
+    </form>
+  </div>
+</div>
+{% endblock %}

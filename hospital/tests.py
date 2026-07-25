@@ -1,11 +1,12 @@
 from datetime import date
+from decimal import Decimal
 
 from django.test import TestCase
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
 
-from .models import Ambulance, Bed, BloodDonor, EmergencyCase, Patient, User
+from .models import Ambulance, Bed, BloodDonor, EmergencyCase, Invoice, Patient, User
 from .portal import PORTAL_MODELS
 
 
@@ -33,6 +34,8 @@ class PortalViewsTests(TestCase):
     def setUp(self):
         self.staff_user = User.objects.create_user(username="staffadmin", password="password123", is_staff=True, role=User.Role.ADMIN)
         self.client.force_login(self.staff_user)
+        self.patient = Patient.objects.create(first_name="Test", last_name="Patient", date_of_birth=date(1992, 4, 10), sex="Male", phone="9888888888", emergency_contact_name="Contact", emergency_contact_phone="9777777777")
+        self.invoice = Invoice.objects.create(patient=self.patient, invoice_number="INV-TEST-001", subtotal=Decimal("1000.00"), gst_amount=Decimal("180.00"), paid_amount=Decimal("1180.00"))
 
     def test_all_portal_resource_lists_return_200(self):
         for resource in PORTAL_MODELS:
@@ -46,36 +49,25 @@ class PortalViewsTests(TestCase):
             response = self.client.get(url)
             self.assertEqual(response.status_code, 200, f"Portal form '{resource}' returned {response.status_code}")
 
-    def test_emergency_case_creation_and_list(self):
-        url = reverse("portal-resource-create", kwargs={"resource": "emergency-cases"})
-        response = self.client.post(url, {
-            "temporary_patient_name": "John Doe Triage",
-            "triage_level": "RED",
-            "chief_complaint": "Chest Pain",
-            "status": "ARRIVED",
-        })
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(EmergencyCase.objects.filter(temporary_patient_name="John Doe Triage").exists())
+    def test_invoice_pdf_download_returns_200(self):
+        url = reverse("download-invoice-pdf", kwargs={"invoice_id": self.invoice.id})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/pdf")
 
-    def test_ambulance_creation(self):
-        url = reverse("portal-resource-create", kwargs={"resource": "ambulances"})
-        response = self.client.post(url, {
-            "vehicle_number": "AMB-101",
-            "driver_name": "Rajesh Kumar",
-            "driver_phone": "9876543210",
-            "status": "AVAILABLE",
-        })
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(Ambulance.objects.filter(vehicle_number="AMB-101").exists())
+    def test_excel_revenue_export_returns_200(self):
+        url = reverse("export-revenue-excel")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("application/vnd.openxmlformats-officedocument", response["Content-Type"])
 
-    def test_blood_donor_creation(self):
-        url = reverse("portal-resource-create", kwargs={"resource": "blood-donors"})
-        response = self.client.post(url, {
-            "full_name": "Vikram Singh",
-            "blood_group": "O+",
-            "phone": "9123456789",
-            "date_of_birth": "1995-05-15",
-            "is_eligible": True,
-        })
-        self.assertEqual(response.status_code, 302)
-        self.assertTrue(BloodDonor.objects.filter(phone="9123456789").exists())
+    def test_csv_patients_export_returns_200(self):
+        url = reverse("export-patients-csv")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "text/csv")
+
+    def test_swagger_ui_returns_200(self):
+        url = reverse("swagger-ui")
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)

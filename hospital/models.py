@@ -15,6 +15,8 @@ class User(AbstractUser):
         PATIENT = "PATIENT", "Patient"
         PHARMACIST = "PHARMACIST", "Pharmacist"
         LAB_TECHNICIAN = "LAB_TECHNICIAN", "Lab technician"
+        ACCOUNTANT = "ACCOUNTANT", "Accountant"
+        RADIOLOGIST = "RADIOLOGIST", "Radiologist"
 
     role = models.CharField(max_length=20, choices=Role.choices, default=Role.PATIENT)
     phone = models.CharField(max_length=20, blank=True)
@@ -40,6 +42,11 @@ class Patient(models.Model):
     blood_group = models.CharField(max_length=5, blank=True)
     emergency_contact_name = models.CharField(max_length=150)
     emergency_contact_phone = models.CharField(max_length=20)
+    allergies = models.TextField(blank=True)
+    family_history = models.TextField(blank=True)
+    medical_history = models.TextField(blank=True)
+    insurance_provider = models.CharField(max_length=150, blank=True)
+    insurance_policy_number = models.CharField(max_length=100, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -404,3 +411,169 @@ class AuditLog(models.Model):
     status_code = models.PositiveSmallIntegerField()
     ip_address = models.GenericIPAddressField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, db_index=True)
+
+
+class DoctorSchedule(models.Model):
+    class DayOfWeek(models.TextChoices):
+        MONDAY = "MONDAY", "Monday"
+        TUESDAY = "TUESDAY", "Tuesday"
+        WEDNESDAY = "WEDNESDAY", "Wednesday"
+        THURSDAY = "THURSDAY", "Thursday"
+        FRIDAY = "FRIDAY", "Friday"
+        SATURDAY = "SATURDAY", "Saturday"
+        SUNDAY = "SUNDAY", "Sunday"
+
+    doctor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="schedules")
+    day_of_week = models.CharField(max_length=12, choices=DayOfWeek.choices)
+    start_time = models.TimeField()
+    end_time = models.TimeField()
+    slot_duration_minutes = models.PositiveSmallIntegerField(default=15)
+    max_patients = models.PositiveSmallIntegerField(default=20)
+    is_active = models.BooleanField(default=True)
+
+    def __str__(self):
+        return f"Dr. {self.doctor.username} - {self.day_of_week} ({self.start_time} - {self.end_time})"
+
+
+class DoctorLeave(models.Model):
+    class Status(models.TextChoices):
+        REQUESTED = "REQUESTED", "Requested"
+        APPROVED = "APPROVED", "Approved"
+        REJECTED = "REJECTED", "Rejected"
+
+    doctor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="leaves")
+    start_date = models.DateField()
+    end_date = models.DateField()
+    reason = models.TextField(blank=True)
+    status = models.CharField(max_length=12, choices=Status.choices, default=Status.APPROVED)
+
+    def __str__(self):
+        return f"Dr. {self.doctor.username} Leave ({self.start_date} to {self.end_date})"
+
+
+class OpdToken(models.Model):
+    class Status(models.TextChoices):
+        WAITING = "WAITING", "Waiting"
+        IN_CONSULTATION = "IN_CONSULTATION", "In consultation"
+        COMPLETED = "COMPLETED", "Completed"
+        CANCELLED = "CANCELLED", "Cancelled"
+
+    token_number = models.PositiveIntegerField()
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="opd_tokens")
+    doctor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="opd_tokens")
+    department = models.ForeignKey(Department, on_delete=models.PROTECT)
+    date = models.DateField()
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.WAITING)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Token #{self.token_number} - {self.patient} (Dr. {self.doctor.username})"
+
+
+class RadiologyReport(models.Model):
+    class Modality(models.TextChoices):
+        XRAY = "XRAY", "X-Ray"
+        CT = "CT", "CT Scan"
+        MRI = "MRI", "MRI"
+        ULTRASOUND = "ULTRASOUND", "Ultrasound"
+
+    class Status(models.TextChoices):
+        ORDERED = "ORDERED", "Ordered"
+        COMPLETED = "COMPLETED", "Completed"
+        CANCELLED = "CANCELLED", "Cancelled"
+
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, related_name="radiology_reports")
+    ordered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT, related_name="radiology_orders")
+    radiologist = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, null=True, blank=True, related_name="radiology_reports")
+    modality = models.CharField(max_length=15, choices=Modality.choices, default=Modality.XRAY)
+    body_part = models.CharField(max_length=100)
+    findings = models.TextField()
+    impression = models.TextField(blank=True)
+    image_file = models.FileField(upload_to="radiology/", blank=True)
+    report_pdf = models.FileField(upload_to="radiology_reports/", blank=True)
+    status = models.CharField(max_length=12, choices=Status.choices, default=Status.ORDERED)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.modality} - {self.patient} ({self.body_part})"
+
+
+class PatientDocument(models.Model):
+    class DocType(models.TextChoices):
+        PRESCRIPTION = "PRESCRIPTION", "Prescription"
+        LAB = "LAB", "Lab Report"
+        RADIOLOGY = "RADIOLOGY", "Radiology Image"
+        ID_PROOF = "ID_PROOF", "ID Proof"
+        OTHER = "OTHER", "Other Document"
+
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="documents")
+    title = models.CharField(max_length=200)
+    document_type = models.CharField(max_length=20, choices=DocType.choices, default=DocType.OTHER)
+    file = models.FileField(upload_to="patient_documents/")
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.title} - {self.patient}"
+
+
+class NursingNote(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="nursing_notes")
+    nurse = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    note = models.TextField()
+    recorded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Note for {self.patient} by {self.nurse.username}"
+
+
+class MedicationAdministrationLog(models.Model):
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE, related_name="medication_logs")
+    administered_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
+    medicine = models.ForeignKey(Medicine, on_delete=models.PROTECT)
+    dosage = models.CharField(max_length=100)
+    administered_at = models.DateTimeField(auto_now_add=True)
+    notes = models.TextField(blank=True)
+
+    def __str__(self):
+        return f"{self.medicine.name} to {self.patient}"
+
+
+class PaymentGatewayTransaction(models.Model):
+    class Gateway(models.TextChoices):
+        RAZORPAY = "RAZORPAY", "Razorpay"
+        STRIPE = "STRIPE", "Stripe"
+        UPI = "UPI", "UPI"
+        CASH = "CASH", "Cash"
+
+    class Status(models.TextChoices):
+        PENDING = "PENDING", "Pending"
+        SUCCESS = "SUCCESS", "Success"
+        FAILED = "FAILED", "Failed"
+        REFUNDED = "REFUNDED", "Refunded"
+
+    invoice = models.ForeignKey(Invoice, on_delete=models.PROTECT, related_name="gateway_transactions")
+    gateway = models.CharField(max_length=12, choices=Gateway.choices, default=Gateway.RAZORPAY)
+    transaction_id = models.CharField(max_length=150, unique=True)
+    order_id = models.CharField(max_length=150, blank=True)
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    currency = models.CharField(max_length=10, default="INR")
+    status = models.CharField(max_length=12, choices=Status.choices, default=Status.PENDING)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.gateway} - {self.transaction_id} ({self.status})"
+
+
+class SystemBackupLog(models.Model):
+    class Status(models.TextChoices):
+        SUCCESS = "SUCCESS", "Success"
+        FAILED = "FAILED", "Failed"
+
+    file_name = models.CharField(max_length=255)
+    file_size_bytes = models.PositiveIntegerField()
+    status = models.CharField(max_length=12, choices=Status.choices, default=Status.SUCCESS)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Backup {self.file_name} ({self.status})"
+

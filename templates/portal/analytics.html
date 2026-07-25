@@ -1,0 +1,66 @@
+{% extends "portal/base.html" %}
+
+{% block title %}Analytics & Financial Reports - CarePoint HMS{% endblock %}
+{% block heading %}Analytics & Financial Intelligence{% endblock %}
+{% block subheading %}Real-time hospital revenue trends, OPD patient volume, and exportable reports{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; wrap: flex-wrap; gap: 16px;">
+    <div>
+      <h3 style="font-size: 1.125rem; font-weight: 700;">Executive Financial Export</h3>
+      <p style="color: var(--muted); font-size: 0.875rem;">Download raw revenue ledgers and patient directory dumps</p>
+    </div>
+    <div style="display: flex; gap: 12px;">
+      <a href="{% url 'export-revenue-excel' %}" class="btn primary">📊 Export Revenue (.XLSX)</a>
+      <a href="{% url 'export-patients-csv' %}" class="btn secondary">📥 Export Patients (.CSV)</a>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-2" style="margin-bottom: 24px;">
+  <div class="card">
+    <h3 style="margin-bottom: 16px; font-size: 1.125rem; font-weight: 700;">Monthly Daily Revenue Breakdown</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Daily Collections (INR)</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in daily_revenue %}
+          <tr>
+            <td>{{ row.issued_at__date|date:"d M Y" }}</td>
+            <td style="font-weight: 700; color: #10b981;">₹ {{ row.total|floatformat:2 }}</td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2" style="text-align: center; color: var(--muted);">No revenue records this month.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-bottom: 16px; font-size: 1.125rem; font-weight: 700;">Doctor Consultation Volume</h3>
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Doctor Username</th>
+          <th>Total Consultations</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for doc in doctor_volume %}
+          <tr>
+            <td style="font-weight: 600;">Dr. {{ doc.doctor__username }}</td>
+            <td><span class="badge status-success">{{ doc.total_appointments }} Patients</span></td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2" style="text-align: center; color: var(--muted);">No doctor consultation data available.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -12,22 +12,31 @@ from .views import (
     ConsentRecordViewSet,
     DepartmentViewSet,
     DischargeSummaryViewSet,
+    DoctorLeaveViewSet,
+    DoctorScheduleViewSet,
     EmergencyCaseViewSet,
     EncounterViewSet,
     InsuranceClaimViewSet,
     InvoiceViewSet,
     LabReportViewSet,
     LabTestOrderViewSet,
+    MedicationAdministrationLogViewSet,
     MedicineViewSet,
     NotificationViewSet,
+    NursingNoteViewSet,
+    OpdTokenViewSet,
     OperationScheduleViewSet,
+    PatientDocumentViewSet,
     PatientViewSet,
+    PaymentGatewayTransactionViewSet,
     PaymentViewSet,
     PrescriptionItemViewSet,
     PrescriptionViewSet,
     PurchaseOrderViewSet,
+    RadiologyReportViewSet,
     ReportViewSet,
     SupplierViewSet,
+    SystemBackupLogViewSet,
     VitalSignViewSet,
 )
 
@@ -59,6 +68,16 @@ router.register("purchase-orders", PurchaseOrderViewSet)
 router.register("lab-reports", LabReportViewSet)
 router.register("lab-orders", LabTestOrderViewSet)
 router.register("notifications", NotificationViewSet)
+router.register("doctor-schedules", DoctorScheduleViewSet)
+router.register("doctor-leaves", DoctorLeaveViewSet)
+router.register("opd-tokens", OpdTokenViewSet)
+router.register("radiology-reports", RadiologyReportViewSet)
+router.register("patient-documents", PatientDocumentViewSet)
+router.register("nursing-notes", NursingNoteViewSet)
+router.register("medication-logs", MedicationAdministrationLogViewSet)
+router.register("payment-transactions", PaymentGatewayTransactionViewSet)
+router.register("backup-logs", SystemBackupLogViewSet)
 router.register("reports", ReportViewSet, basename="reports")
 
 urlpatterns = router.urls
+

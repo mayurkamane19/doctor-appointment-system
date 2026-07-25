@@ -12,21 +12,30 @@ from .models import (
     ConsentRecord,
     Department,
     DischargeSummary,
+    DoctorLeave,
+    DoctorSchedule,
     EmergencyCase,
     Encounter,
     InsuranceClaim,
     Invoice,
     LabReport,
     LabTestOrder,
+    MedicationAdministrationLog,
     Medicine,
     Notification,
+    NursingNote,
+    OpdToken,
     OperationSchedule,
     Patient,
+    PatientDocument,
     Payment,
+    PaymentGatewayTransaction,
     Prescription,
     PrescriptionItem,
     PurchaseOrder,
+    RadiologyReport,
     Supplier,
+    SystemBackupLog,
     VitalSign,
 )
 
@@ -223,3 +232,65 @@ class NotificationSerializer(serializers.ModelSerializer):
         model = Notification
         fields = "__all__"
         read_only_fields = ("created_at",)
+
+
+class DoctorScheduleSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorSchedule
+        fields = "__all__"
+
+
+class DoctorLeaveSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DoctorLeave
+        fields = "__all__"
+
+
+class OpdTokenSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OpdToken
+        fields = "__all__"
+        read_only_fields = ("created_at",)
+
+
+class RadiologyReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RadiologyReport
+        fields = "__all__"
+        read_only_fields = ("created_at",)
+
+
+class PatientDocumentSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientDocument
+        fields = "__all__"
+        read_only_fields = ("uploaded_at",)
+
+
+class NursingNoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NursingNote
+        fields = "__all__"
+        read_only_fields = ("recorded_at",)
+
+
+class MedicationAdministrationLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicationAdministrationLog
+        fields = "__all__"
+        read_only_fields = ("administered_at",)
+
+
+class PaymentGatewayTransactionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PaymentGatewayTransaction
+        fields = "__all__"
+        read_only_fields = ("created_at",)
+
+
+class SystemBackupLogSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SystemBackupLog
+        fields = "__all__"
+        read_only_fields = ("created_at",)
+

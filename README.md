@@ -1,237 +1,108 @@
-# 🏥 Doctor Appointment System
+# 🏥 CarePoint HMS - Enterprise Hospital Management ERP System
 
-A full-featured **Hospital Management System** built using **Django** and **Django REST Framework**. The system streamlines hospital operations with secure patient management, doctor scheduling, appointments, prescriptions, billing, reports, authentication, and an advanced admin dashboard.
-
----
-
-## 🌐 Live Demo
-
-🔗 **Live Website:**  
-https://doctor-appointment-system-z8k5.onrender.com
+**CarePoint HMS** is a commercial-grade, full-featured **Enterprise Hospital ERP Platform** built with **Django 5.1**, **Django REST Framework (DRF)**, **WhiteNoise**, **ReportLab PDF**, **openpyxl Excel**, and **drf-spectacular OpenAPI/Swagger**.
 
 ---
 
-## 📂 GitHub Repository
+## 🌐 Live Demo & Deployment
 
-🔗 https://github.com/mayurkamane19/doctor-appointment-system
-
----
-
-## 📸 Screenshots
-
-> Add screenshots of your Home Page, Dashboard, Patient Management, Appointment Module, and Admin Panel here.
-
---<img width="1920" height="1020" alt="Screenshot 2026-07-26 010624" src="https://github.com/user-attachments/assets/fad4563d-02a0-4ea7-805d-8466508093bb" />
--
-
-## ✨ Features
-
-- 👨‍⚕️ Doctor Management
-- 🧑 Patient Management
-- 📅 Appointment Scheduling
-- 🏥 Hospital Administration
-- 💊 Prescription Management
-- 🩺 OPD & IPD Management
-- 🚑 Ambulance Management
-- 🛏 Bed Management
-- 🧪 Laboratory Reports
-- 💉 Blood Bank Management
-- 💰 Billing & Payments
-- 📊 Reports & Analytics
-- 🔔 Notification Management
-- 🔐 Authentication & Authorization (RBAC)
-- 📱 Responsive Admin Dashboard
-- 🚀 Production Deployment on Render
+- 🔗 **Live Production Site:** [https://doctor-appointment-system-z8k5.onrender.com](https://doctor-appointment-system-z8k5.onrender.com)
+- 📖 **Interactive Swagger API Docs:** [https://doctor-appointment-system-z8k5.onrender.com/api/docs/](https://doctor-appointment-system-z8k5.onrender.com/api/docs/)
+- 📂 **GitHub Repository:** [https://github.com/mayurkamane19/doctor-appointment-system](https://github.com/mayurkamane19/doctor-appointment-system)
 
 ---
 
-## 🛠 Tech Stack
+## 🚀 Key Enterprise Modules
 
-### Backend
-- Python
-- Django
-- Django REST Framework
+### 👤 1. Patient & OPD Management
+- Patient Registration, Digital Patient Code UUID, Medical History, Allergies, Family History, Insurance Details.
+- Patient Digital QR Code Identity Cards (`/portal/patients/<id>/card/`).
+- OPD Queue Token System with token status tracking (`WAITING`, `IN_CONSULTATION`, `COMPLETED`, `CANCELLED`).
+- Medical Document Vault for uploading patient records, prescriptions, and lab documents.
 
-### Database
-- SQLite
-- PostgreSQL (Production Ready)
+### 🗓️ 2. Doctor Scheduling & OPD Calendar
+- Doctor Shift Scheduling & Time-Slot Management.
+- Leave Request Approval Workflow (`REQUESTED`, `APPROVED`, `REJECTED`).
+- Department Assignment and Consultation Volume Tracking.
 
-### Frontend
-- HTML5
-- CSS3
-- JavaScript
+### 🚨 3. Emergency Triage & Ambulance Fleet
+- 4-Tier Emergency Triage (`CRITICAL_RESUSCITATION`, `EMERGENCY`, `URGENT`, `NON_URGENT`).
+- Ambulance Fleet Management with Live Driver Contact and Pickup Dispatching.
 
-### Deployment
-- Gunicorn
-- WhiteNoise
-- Docker
-- Render
+### 🩻 4. Radiology & Imaging (PACS/RIS Ready)
+- Modality Scheduling for **X-Ray, CT Scan, MRI, and Ultrasound**.
+- Findings, Radiological Impressions, and Image/PDF Uploads.
 
-### Tools
-- Git
-- GitHub
-- VS Code
+### 🏥 5. IPD Admissions, Beds & Operation Theatre (OT)
+- Ward & Bed Allocation Grid with Real-Time Occupancy Analytics.
+- OT Surgery Scheduling with Surgeon, Operating Room, and Anaesthetist Assignment.
+- One-Click Discharge Summary Generation.
+
+### 🩺 6. Nursing & Inpatient Care
+- Real-time Vitals Recording (BP, Pulse, Temperature, SpO2, Weight).
+- Nursing Shift Notes and Medication Administration Logs with Dosage Timestamping.
+
+### 🧪 7. Laboratory & Pharmacy ERP
+- Lab Test Ordering & Sample Collection Tracking.
+- Pharmacy Stock Management with Low Stock Reorder Alerts.
+- Supplier Purchase Orders & Blood Bank Inventory (Donors, Units, Requests).
+
+### 🧾 8. Finance, GST Billing & Payment Gateways
+- Line-Item GST Invoices with Automated Tax Split.
+- Razorpay & Stripe Payment Gateway Transaction Tracking.
+- TPA Insurance Claims Management.
+
+### 📑 9. PDF Reports & Excel Exports
+- **Downloadable PDF Reports**: Invoices, E-Prescriptions, and Discharge Summaries generated via ReportLab.
+- **Data Exports**: One-click Excel `.xlsx` revenue audit exports and `.csv` patient directory downloads.
+
+### 📖 10. Interactive OpenAPI / Swagger API Docs
+- Live Swagger UI at `/api/docs/` and ReDoc at `/api/redoc/`.
+- Complete JWT Authentication (`POST /api/auth/token/`).
 
 ---
 
-## 📁 Project Structure
+## 🛠️ Installation & Setup
 
-```
-doctor-appointment-system/
-│
-├── config/
-├── core/
-├── hospital/
-├── templates/
-├── nginx/
-├── manage.py
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-├── render.yaml
-└── README.md
-```
-
----
-
-## 🚀 Installation
-
-### Clone Repository
-
+### 1. Local Development
 ```bash
+# Clone Repository
 git clone https://github.com/mayurkamane19/doctor-appointment-system.git
-
 cd doctor-appointment-system
-```
 
-### Create Virtual Environment
-
-```bash
-python -m venv venv
-```
-
-### Activate Virtual Environment
-
-#### Windows
-
-```bash
-venv\Scripts\activate
-```
-
-#### Linux / macOS
-
-```bash
-source venv/bin/activate
-```
-
-### Install Dependencies
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
-```
 
-### Apply Migrations
-
-```bash
+# Apply database migrations
 python manage.py migrate
-```
 
-### Create Superuser
-
-```bash
+# Create superuser
 python manage.py createsuperuser
-```
 
-### Run Development Server
-
-```bash
+# Start development server
 python manage.py runserver
 ```
 
-Open:
-
-```
-http://127.0.0.1:8000/
-```
+Access the portal at `http://127.0.0.1:8000/` and Swagger API docs at `http://127.0.0.1:8000/api/docs/`.
 
 ---
 
-## 🔑 Admin Panel
+## 🌐 Production Deployment on Render
 
-```
-http://127.0.0.1:8000/admin/
-```
+This project is pre-configured for 1-click zero-config deployment on **Render**:
+- Uses **WhiteNoise** for high-performance static CSS/JS file serving.
+- `build.sh` automatically collects static files and executes database migrations on deploy.
+- Dual-support database engine: PostgreSQL on Render (`DATABASE_URL`), SQLite locally.
 
-Create an administrator account using:
-
-```bash
-python manage.py createsuperuser
-```
-
----
-
-## 🔐 Authentication
-
-- JWT Authentication
-- Role-Based Access Control (RBAC)
-- Django Authentication System
+### Production Environment Variables:
+- `DEBUG`: `False`
+- `DJANGO_SECRET_KEY`: *(Generate a secure random string)*
+- `ALLOWED_HOSTS`: `doctor-appointment-system-z8k5.onrender.com,.onrender.com`
+- `CSRF_TRUSTED_ORIGINS`: `https://doctor-appointment-system-z8k5.onrender.com,https://*.onrender.com`
 
 ---
 
-## 🌍 Deployment
-
-The project is successfully deployed on **Render** using:
-
-- Gunicorn
-- WhiteNoise
-- Docker
-- Environment Variables
-- Automatic Database Migrations
-
----
-
-## 📌 Future Improvements
-
-- Patient Portal
-- Doctor Portal
-- Online Payment Gateway
-- SMS & Email Notifications
-- WhatsApp Integration
-- Video Consultation
-- AI Chatbot
-- Appointment Reminders
-- Medical Report Upload
-- Dashboard Analytics
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome.
-
-1. Fork the repository.
-2. Create a feature branch.
-3. Commit your changes.
-4. Push your branch.
-5. Open a Pull Request.
-
----
-
-## 👨‍💻 Author
-
-**Mayur Kamane**
-
-- GitHub: https://github.com/mayurkamane19
-- LinkedIn: https://www.linkedin.com/in/mayurkamane19
-
----
-
-## ⭐ Support
-
-If you found this project useful, please consider giving it a ⭐ on GitHub.
-
----
-
-## 📄 License
-
-This project is created for educational and portfolio purposes.
+## 🔒 Security & RBAC
+- Role-Based Access Control (`ADMIN`, `DOCTOR`, `NURSE`, `RECEPTIONIST`, `PHARMACIST`, `LAB_TECHNICIAN`, `ACCOUNTANT`, `RADIOLOGIST`, `PATIENT`).
+- Audit Logging (`AuditLog`) tracking all mutating API requests.
+- Secure CSRF protection & `SECURE_PROXY_SSL_HEADER` support for SSL proxy environments.
