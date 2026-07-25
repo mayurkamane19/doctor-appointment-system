@@ -21,7 +21,8 @@ https://doctor-appointment-system-z8k5.onrender.com
 
 > Add screenshots of your Home Page, Dashboard, Patient Management, Appointment Module, and Admin Panel here.
 
----
+--<img width="1920" height="1020" alt="Screenshot 2026-07-26 010624" src="https://github.com/user-attachments/assets/fad4563d-02a0-4ea7-805d-8466508093bb" />
+-
 
 ## ✨ Features
 
