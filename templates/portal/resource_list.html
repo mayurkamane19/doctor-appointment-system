@@ -1,0 +1,59 @@
+{% extends "portal/base.html" %}
+
+{% block heading %}{{ config.title }}{% endblock %}
+{% block subheading %}Manage, search, edit, and filter hospital {{ config.title|lower }}{% endblock %}
+
+{% block content %}
+<div class="toolbar">
+  <form class="search-box" method="get">
+    <input class="form-control" name="q" value="{{ query }}" placeholder="Search {{ config.title|lower }} by name or text...">
+    <button class="btn secondary" type="submit">Search</button>
+    {% if query %}
+      <a class="btn secondary" href="/portal/{{ resource }}/">Clear</a>
+    {% endif %}
+  </form>
+  <a class="btn" href="/portal/{{ resource }}/new/">
+    <span>+ Add {{ config.singular }}</span>
+  </a>
+</div>
+
+<div class="table-container">
+  {% if rows %}
+    <table>
+      <thead>
+        <tr>
+          {% for column in config.columns %}
+            <th>{{ column|title }}</th>
+          {% endfor %}
+          <th style="width: 120px; text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in rows %}
+          <tr>
+            {% for value in row.values %}
+              <td>{{ value }}</td>
+            {% endfor %}
+            <td style="text-align: right;">
+              <div class="action-group" style="justify-content: flex-end;">
+                {% if resource == "patients" %}
+                  <a class="btn sm secondary" href="/portal/patients/{{ row.object.pk }}/card/">QR Card</a>
+                {% endif %}
+                <a class="btn sm secondary" href="/portal/{{ resource }}/{{ row.object.pk }}/edit/">Edit</a>
+                <a class="btn sm danger" href="/portal/{{ resource }}/{{ row.object.pk }}/delete/">Delete</a>
+              </div>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="empty-state">
+      <p>No {{ config.title|lower }} found{% if query %} matching "{{ query }}"{% endif %}.</p>
+      <div style="margin-top: 14px;">
+        <a href="/portal/{{ resource }}/new/" class="btn">+ Add First {{ config.singular }}</a>
+      </div>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

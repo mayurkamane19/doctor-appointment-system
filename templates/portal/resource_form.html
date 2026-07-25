@@ -1,0 +1,45 @@
+{% extends "portal/base.html" %}
+
+{% block heading %}
+  {% if object %}Edit {{ config.singular }}{% else %}Add {{ config.singular }}{% endif %}
+{% endblock %}
+
+{% block subheading %}Enter accurate details for hospital records{% endblock %}
+
+{% block content %}
+<div style="max-width: 900px;">
+  <form method="post" enctype="multipart/form-data" class="form-card">
+    {% csrf_token %}
+    
+    {% if form.non_field_errors %}
+      <div class="flash-message error" style="margin-bottom: 24px;">
+        {{ form.non_field_errors }}
+      </div>
+    {% endif %}
+
+    <div class="form-grid">
+      {% for field in form %}
+        <div class="form-group {% if 'textarea' in field.field.widget.template_name or 'file' in field.field.widget.template_name %}full-width{% endif %}">
+          <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <ul class="error-list">
+              {% for error in field.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+          {% if field.help_text %}
+            <span class="help-text">{{ field.help_text }}</span>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="form-actions">
+      <button class="btn" type="submit">Save {{ config.singular }}</button>
+      <a class="btn secondary" href="/portal/{{ resource }}/">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

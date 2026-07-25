@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}CarePoint HMS - Hospital Operations{% endblock %}</title>
+  <script>
+    (function() {
+      var savedTheme = localStorage.getItem('theme');
+      var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      var theme = savedTheme || (prefersDark ? 'dark' : 'light');
+      document.documentElement.setAttribute('data-theme', theme);
+    })();
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sidebar-bg: #0b1a2c;
+      --sidebar-nav: #14283e;
+      --sidebar-active: #0ea5e9;
+      --sidebar-text: #94a3b8;
+      --sidebar-text-active: #ffffff;
+      --primary: #0284c7;
+      --primary-hover: #0369a1;
+      --accent: #06b6d4;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --topbar-bg: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --line: #e2e8f0;
+      --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --input-bg: #ffffff;
+      --input-border: #cbd5e1;
+      --table-header-bg: #f8fafc;
+      --table-hover: #f8fafc;
+      --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04);
+      --radius: 12px;
+    }
+
+    [data-theme="dark"] {
+      --sidebar-bg: #070f1e;
+      --sidebar-nav: #0f1d30;
+      --sidebar-active: #38bdf8;
+      --sidebar-text: #94a3b8;
+      --sidebar-text-active: #ffffff;
+      --primary: #0284c7;
+      --primary-hover: #38bdf8;
+      --accent: #22d3ee;
+      --bg: #0b1329;
+      --card-bg: #111c35;
+      --topbar-bg: #111c35;
+      --text: #f8fafc;
+      --muted: #94a3b8;
+      --line: #1e293b;
+      --input-bg: #0b1329;
+      --input-border: #334155;
+      --table-header-bg: #1e293b;
+      --table-hover: #1e293b;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      transition: background-color 0.2s ease, color 0.2s ease;
+    }
+
+    .app-shell {
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      min-height: 100vh;
+      width: 100%;
+    }
+
+    /* Sidebar Navigation */
+    aside {
+      background: var(--sidebar-bg);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+    }
+
+    aside::-webkit-scrollbar { width: 4px; }
+    aside::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.15); border-radius: 4px; }
+
+    .brand-header {
+      padding: 24px 20px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .brand-logo {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, #0ea5e9, #06b6d4);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 18px;
+      color: white;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.3);
+    }
+
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #fff;
+    }
+
+    .brand-title span { color: var(--accent); }
+
+    .nav-container { padding: 16px 12px; flex: 1; }
+
+    .nav-section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      margin: 20px 12px 8px;
+    }
+
+    .nav-section-label:first-child { margin-top: 4px; }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 9px 12px;
+      margin: 2px 0;
+      color: var(--sidebar-text);
+      text-decoration: none;
+      border-radius: 8px;
+      font-size: 13.5px;
+      font-weight: 500;
+      transition: all 0.15s ease;
+    }
+
+    .nav-link:hover {
+      background: var(--sidebar-nav);
+      color: var(--sidebar-text-active);
+    }
+
+    .nav-link.active {
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(14, 165, 233, 0.25);
+    }
+
+    /* Main Area Layout */
+    main {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      min-width: 0;
+      padding: 0;
+    }
+
+    .top-bar {
+      background: var(--topbar-bg);
+      border-bottom: 1px solid var(--line);
+      padding: 16px 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .page-header-title {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .system-status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #059669;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+      margin-bottom: 2px;
+    }
+
+    [data-theme="dark"] .system-status-pill { color: #34d399; }
+
+    .page-header-title h1 {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.4px;
+    }
+
+    .page-header-title p {
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      padding: 6px 14px 6px 8px;
+      border-radius: 30px;
+    }
+
+    .user-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #0ea5e9, #6366f1);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .user-info { font-size: 13px; font-weight: 600; color: var(--text); }
+    .user-logout {
+      font-size: 12px;
+      color: var(--danger);
+      text-decoration: none;
+      margin-left: 6px;
+      font-weight: 600;
+    }
+    .user-logout:hover { text-decoration: underline; }
+
+    .content-container {
+      padding: 28px 32px;
+      flex: 1;
+      width: 100%;
+      box-sizing: border-box;
+    }
+
+    /* Flash Messages */
+    .flash-message {
+      padding: 12px 18px;
+      border-radius: 8px;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      color: #065f46;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .flash-message.error {
+      background: #fef2f2;
+      border-color: #fecaca;
+      color: #991b1b;
+    }
+
+    /* Cards & Components */
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-sm);
+      transition: box-shadow 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    }
+
+    .card-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .card-body { padding: 24px; }
+
+    /* Action Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 9px 16px;
+      font-size: 13.5px;
+      font-weight: 600;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      background: var(--primary);
+      color: #ffffff;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+
+    .btn:hover { background: var(--primary-hover); transform: translateY(-1px); }
+    .btn.secondary { background: var(--card-bg); border-color: var(--line); color: var(--text); }
+    .btn.secondary:hover { background: var(--bg); border-color: #cbd5e1; }
+    .btn.danger { background: var(--danger); color: white; }
+    .btn.danger:hover { background: var(--danger-hover); }
+    .btn.sm { padding: 6px 12px; font-size: 12.5px; border-radius: 6px; }
+
+    /* Tables */
+    .table-container {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      overflow-x: auto;
+      box-shadow: var(--shadow-sm);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13.5px;
+      text-align: left;
+    }
+
+    thead th {
+      background: var(--table-header-bg);
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      padding: 12px 18px;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+    }
+
+    tbody td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--line);
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    tbody tr:last-child td { border-bottom: 0; }
+    tbody tr:hover { background: var(--table-hover); }
+
+    .action-group { display: flex; gap: 8px; align-items: center; }
+    .link-action { color: var(--primary); font-weight: 600; text-decoration: none; font-size: 13px; }
+    .link-action:hover { text-decoration: underline; }
+    .link-action.delete-link { color: var(--danger); }
+
+    /* Badges */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1;
+    }
+
+    .badge-success { background: #dcfce7; color: #15803d; }
+    .badge-warning { background: #fef3c7; color: #b45309; }
+    .badge-danger { background: #fee2e2; color: #b91c1c; }
+    .badge-info { background: #e0f2fe; color: #0369a1; }
+    .badge-neutral { background: #f1f5f9; color: #475569; }
+
+    [data-theme="dark"] .badge-success { background: #064e3b; color: #a7f3d0; }
+    [data-theme="dark"] .badge-warning { background: #78350f; color: #fde68a; }
+    [data-theme="dark"] .badge-danger { background: #7f1d1d; color: #fca5a5; }
+    [data-theme="dark"] .badge-info { background: #0c4a6e; color: #bae6fd; }
+    [data-theme="dark"] .badge-neutral { background: #334155; color: #cbd5e1; }
+
+    /* Search & Filter Header */
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .search-box {
+      display: flex;
+      gap: 8px;
+      flex: 1;
+      max-width: 420px;
+    }
+
+    /* Forms */
+    .form-card {
+      background: var(--card-bg);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 28px;
+      box-shadow: var(--shadow-sm);
+      width: 100%;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group.full-width { grid-column: 1 / -1; }
+
+    label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .form-control, input[type="text"], input[type="number"], input[type="email"], input[type="password"], input[type="date"], input[type="datetime-local"], select, textarea {
+      width: 100%;
+      border: 1px solid var(--input-border);
+      border-radius: 8px;
+      padding: 10px 14px;
+      font-family: inherit;
+      font-size: 13.5px;
+      color: var(--text);
+      background: var(--input-bg);
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .form-control:focus, input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+    }
+
+    textarea.form-control { min-height: 100px; resize: vertical; }
+
+    .help-text { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .error-list { list-style: none; color: var(--danger); font-size: 12px; margin-top: 4px; }
+
+    .form-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      padding-top: 20px;
+      border-top: 1px solid var(--line);
+    }
+
+    .empty-state {
+      padding: 48px 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* Footer Component */
+    .app-footer {
+      background: var(--topbar-bg);
+      border-top: 1px solid var(--line);
+      padding: 32px;
+      margin-top: auto;
+      transition: background-color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .footer-content {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .footer-brand {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-brand h4 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .footer-brand p {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .emergency-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 20px;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-top: 6px;
+      width: fit-content;
+    }
+
+    [data-theme="dark"] .emergency-pill {
+      background: #7f1d1d;
+      color: #fca5a5;
+    }
+
+    .footer-links h5, .footer-info h5 {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .footer-links ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .footer-links a {
+      font-size: 13px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .footer-links a:hover {
+      color: var(--primary);
+    }
+
+    .footer-info p {
+      font-size: 12.5px;
+      color: var(--muted);
+      margin: 4px 0;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid var(--line);
+      padding-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .app-shell { grid-template-columns: 220px 1fr; }
+      .content-container { padding: 20px; }
+      .top-bar { padding: 14px 20px; }
+      .footer-content { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .app-shell { grid-template-columns: 1fr; }
+      aside { display: none; }
+      .top-bar { padding: 12px 16px; }
+      .content-container { padding: 16px; }
+      .footer-content { grid-template-columns: 1fr; }
+      .footer-bottom { flex-direction: column; gap: 10px; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <aside>
+      <div class="brand-header">
+        <div class="brand-logo">+</div>
+        <div class="brand-title">Care<b>Point</b> <span>HMS</span></div>
+      </div>
+      <nav class="nav-container">
+        <div class="nav-section-label">MAIN MENU</div>
+        <a href="/" class="nav-link {% if request.path == '/' %}active{% endif %}">📊 Dashboard</a>
+        <a href="/portal/patients/" class="nav-link {% if '/portal/patients/' in request.path %}active{% endif %}">👤 Patients & QR Cards</a>
+        <a href="/portal/appointments/" class="nav-link {% if '/portal/appointments/' in request.path %}active{% endif %}">📅 Appointments</a>
+        <a href="/portal/notifications/" class="nav-link {% if '/portal/notifications/' in request.path %}active{% endif %}">🔔 Notifications</a>
+
+        <div class="nav-section-label">EMERGENCY & BLOOD BANK</div>
+        <a href="/portal/emergency-cases/" class="nav-link {% if '/portal/emergency-cases/' in request.path %}active{% endif %}">🚨 Emergency Triage</a>
+        <a href="/portal/ambulances/" class="nav-link {% if '/portal/ambulances/' in request.path %}active{% endif %}">🚑 Ambulance Fleet</a>
+        <a href="/portal/ambulance-dispatches/" class="nav-link {% if '/portal/ambulance-dispatches/' in request.path %}active{% endif %}">📋 Dispatches</a>
+        <a href="/portal/blood-donors/" class="nav-link {% if '/portal/blood-donors/' in request.path %}active{% endif %}">🩸 Blood Donors</a>
+        <a href="/portal/blood-units/" class="nav-link {% if '/portal/blood-units/' in request.path %}active{% endif %}">📦 Blood Inventory</a>
+        <a href="/portal/blood-requests/" class="nav-link {% if '/portal/blood-requests/' in request.path %}active{% endif %}">💉 Blood Requests</a>
+
+        <div class="nav-section-label">CLINICAL & IPD</div>
+        <a href="/portal/encounters/" class="nav-link {% if '/portal/encounters/' in request.path %}active{% endif %}">📝 Medical Records</a>
+        <a href="/portal/vitals/" class="nav-link {% if '/portal/vitals/' in request.path %}active{% endif %}">🩺 Nursing Vitals</a>
+        <a href="/portal/prescriptions/" class="nav-link {% if '/portal/prescriptions/' in request.path %}active{% endif %}">💊 E-Prescriptions</a>
+        <a href="/portal/consents/" class="nav-link {% if '/portal/consents/' in request.path %}active{% endif %}">📄 Patient Consents</a>
+        <a href="/portal/admissions/" class="nav-link {% if '/portal/admissions/' in request.path %}active{% endif %}">🏥 IPD Admissions</a>
+        <a href="/portal/discharges/" class="nav-link {% if '/portal/discharges/' in request.path %}active{% endif %}">📋 Discharge Summaries</a>
+        <a href="/portal/beds/" class="nav-link {% if '/portal/beds/' in request.path %}active{% endif %}">🛏️ Bed Management</a>
+        <a href="/portal/operations/" class="nav-link {% if '/portal/operations/' in request.path %}active{% endif %}">🔪 Operation Theatre</a>
+
+        <div class="nav-section-label">LAB & PHARMACY</div>
+        <a href="/portal/lab-orders/" class="nav-link {% if '/portal/lab-orders/' in request.path %}active{% endif %}">🔬 Lab Test Orders</a>
+        <a href="/portal/lab-reports/" class="nav-link {% if '/portal/lab-reports/' in request.path %}active{% endif %}">📄 Lab Reports</a>
+        <a href="/portal/medicines/" class="nav-link {% if '/portal/medicines/' in request.path %}active{% endif %}">💊 Pharmacy Inventory</a>
+        <a href="/portal/suppliers/" class="nav-link {% if '/portal/suppliers/' in request.path %}active{% endif %}">🏭 Suppliers</a>
+        <a href="/portal/purchase-orders/" class="nav-link {% if '/portal/purchase-orders/' in request.path %}active{% endif %}">📦 Purchase Orders</a>
+
+        <div class="nav-section-label">FINANCE & SETUP</div>
+        <a href="/portal/invoices/" class="nav-link {% if '/portal/invoices/' in request.path %}active{% endif %}">🧾 Billing & GST</a>
+        <a href="/portal/payments/" class="nav-link {% if '/portal/payments/' in request.path %}active{% endif %}">💳 Payment Receipts</a>
+        <a href="/portal/insurance-claims/" class="nav-link {% if '/portal/insurance-claims/' in request.path %}active{% endif %}">🛡️ Insurance / TPA</a>
+        <a href="/portal/reports/" class="nav-link {% if '/portal/reports/' in request.path %}active{% endif %}">📈 Analytics & Reports</a>
+        <a href="/portal/departments/" class="nav-link {% if '/portal/departments/' in request.path %}active{% endif %}">🏢 Departments</a>
+        <a href="/admin/" class="nav-link">⚙️ Django Admin</a>
+      </nav>
+    </aside>
+
+    <main>
+      <!-- Top Header Navigation Banner -->
+      <header class="top-bar">
+        <div class="page-header-title">
+          <div class="system-status-pill">
+            <span>●</span> System Operational · Live Sync
+          </div>
+          <h1>{% block heading %}CarePoint HMS{% endblock %}</h1>
+          <p>{% block subheading %}Hospital operations portal{% endblock %}</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px;">
+          <button id="themeToggleBtn" class="btn sm secondary" onclick="toggleTheme()" type="button" title="Toggle Light/Dark Theme">
+            <span id="themeToggleIcon">🌙</span> <span id="themeToggleText">Dark Mode</span>
+          </button>
+          <div class="user-profile">
+            <div class="user-avatar">{{ request.user.username|slice:":1"|upper }}</div>
+            <div class="user-info">
+              {{ request.user.get_full_name|default:request.user.username }}
+              <a class="user-logout" href="/admin/logout/">Sign out</a>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Main Portal Content -->
+      <div class="content-container">
+        {% if messages %}
+          {% for message in messages %}
+            <div class="flash-message {% if message.tags %}{{ message.tags }}{% endif %}">
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        {% block content %}{% endblock %}
+      </div>
+
+      <!-- Dashboard Footer Component -->
+      <footer class="app-footer">
+        <div class="footer-content">
+          <div class="footer-brand">
+            <h4>+ CarePoint Hospital Management System</h4>
+            <p>Comprehensive digital healthcare platform for patient care, emergency triage, IPD admissions, clinical records, pharmacy, and GST billing.</p>
+            <div class="emergency-pill">
+              <span>🚨 Emergency Hotline: 108 | +91-1800-CAREPOINT</span>
+            </div>
+          </div>
+          <div class="footer-links">
+            <h5>Quick Navigation</h5>
+            <ul>
+              <li><a href="/">Dashboard</a></li>
+              <li><a href="/portal/patients/">Patients</a></li>
+              <li><a href="/portal/appointments/">Appointments</a></li>
+              <li><a href="/portal/emergency-cases/">Emergency</a></li>
+              <li><a href="/portal/lab-reports/">Lab Reports</a></li>
+              <li><a href="/portal/invoices/">GST Billing</a></li>
+              <li><a href="/portal/reports/">Analytics</a></li>
+              <li><a href="/admin/">Admin</a></li>
+            </ul>
+          </div>
+          <div class="footer-info">
+            <h5>System Information</h5>
+            <p><strong>Platform:</strong> CarePoint HMS Enterprise v2.4</p>
+            <p><strong>Framework:</strong> Django 5.1 & DRF</p>
+            <p><strong>Timezone:</strong> Asia/Kolkata (IST)</p>
+            <p><strong>Status:</strong> <span style="color: #059669; font-weight: 600;">🟢 All Systems Operational</span></p>
+          </div>
+        </div>
+        <div class="footer-bottom">
+          <div>© 2026 CarePoint Health Systems Ltd. All rights reserved.</div>
+          <div>Authorized Clinical & Administrative Portal Use Only</div>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <script>
+    function updateToggleBtn() {
+      var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      var iconEl = document.getElementById('themeToggleIcon');
+      var textEl = document.getElementById('themeToggleText');
+      if (iconEl && textEl) {
+        if (currentTheme === 'dark') {
+          iconEl.textContent = '☀️';
+          textEl.textContent = 'Light Mode';
+        } else {
+          iconEl.textContent = '🌙';
+          textEl.textContent = 'Dark Mode';
+        }
+      }
+    }
+
+    function toggleTheme() {
+      var currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
+      var newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      document.documentElement.setAttribute('data-theme', newTheme);
+      localStorage.setItem('theme', newTheme);
+      updateToggleBtn();
+    }
+
+    document.addEventListener('DOMContentLoaded', updateToggleBtn);
+  </script>
+</body>
+</html>

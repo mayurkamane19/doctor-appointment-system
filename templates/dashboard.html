@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CarePoint HMS | Dashboard</title>
+  <style>
+    :root { --ink:#18263c; --muted:#6c7a91; --brand:#087c86; --soft:#eef6f7; --line:#e5eaf0; --alert:#dd5b5b; }
+    * { box-sizing:border-box; } body { margin:0; font-family:Inter,Segoe UI,Arial,sans-serif; color:var(--ink); background:#f5f8fb; }
+    .shell { display:grid; grid-template-columns:248px 1fr; min-height:100vh; }
+    aside { background:#0a5e68; color:white; padding:26px 16px; }
+    .logo { font-size:20px; font-weight:800; letter-spacing:.2px; padding:0 12px 30px; } .logo span { color:#a9e5d0; }
+    .nav-label { color:#a3d4d7; font-size:11px; letter-spacing:1px; margin:20px 12px 8px; }
+    .nav a { display:block; padding:12px; margin:4px 0; color:#e9ffff; text-decoration:none; border-radius:8px; font-size:14px; }
+    .nav a.active,.nav a:hover { background:#087c86; } .nav i { display:inline-block; width:26px; font-style:normal; }
+    main { padding:28px 36px; } header { display:flex; justify-content:space-between; align-items:center; margin-bottom:30px; }
+    h1 { font-size:25px; margin:0 0 5px; } .subtitle { margin:0; color:var(--muted); font-size:14px; }
+    .profile { background:white; border:1px solid var(--line); padding:10px 15px; border-radius:9px; font-size:14px; }
+    .metrics { display:grid; grid-template-columns:repeat(4, minmax(150px,1fr)); gap:18px; }
+    .metric,.card { background:white; border:1px solid var(--line); border-radius:12px; box-shadow:0 2px 10px #18334a0a; }
+    .metric { padding:19px; } .metric p { margin:0; color:var(--muted); font-size:13px; } .metric strong { display:block; font-size:27px; margin:11px 0 4px; } .up { color:#16825c; font-size:12px; }
+    .section { display:flex; align-items:center; justify-content:space-between; margin:31px 0 15px; } h2 { font-size:17px; margin:0; } button { border:0; border-radius:7px; background:var(--brand); color:white; padding:9px 13px; cursor:pointer; }
+    .actions { display:grid; grid-template-columns:repeat(3,1fr); gap:15px; }.action { text-decoration:none; color:var(--ink); padding:18px; }.icon { font-size:24px; float:right; }.action h3 { margin:2px 0 7px; font-size:15px; }.action p { color:var(--muted); margin:0; font-size:13px; }
+    .bottom { display:grid; grid-template-columns:1.35fr .9fr; gap:18px; margin-top:25px; }.card h3 { font-size:15px; margin:0; padding:18px; border-bottom:1px solid var(--line); }.rows { padding:4px 18px; }.row { display:flex; align-items:center; justify-content:space-between; padding:14px 0; border-bottom:1px solid var(--line); font-size:14px; }.row:last-child { border:0; }.time { color:var(--brand); font-weight:700; width:75px; }.patient { flex:1; }.badge { font-size:11px; padding:5px 8px; background:var(--soft); color:var(--brand); border-radius:20px; }.notice { padding:18px; }.notice-item { display:flex; gap:12px; padding:12px 0; border-bottom:1px solid var(--line); }.notice-item:last-child { border:0; }.dot { height:9px; width:9px; border-radius:50%; background:var(--alert); margin-top:5px; }.notice p { margin:0; font-size:13px; color:var(--muted); }.notice strong { font-size:14px; }
+    @media(max-width:900px) { .shell { grid-template-columns:1fr; } aside { display:none; } main { padding:22px; }.metrics { grid-template-columns:repeat(2,1fr); }.actions { grid-template-columns:repeat(2,1fr); }.bottom { grid-template-columns:1fr; } } @media(max-width:520px) { .metrics,.actions { grid-template-columns:1fr; } header { align-items:flex-start; gap:14px; flex-direction:column; } }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <aside><div class="logo">✚ Care<span>Point</span> HMS</div><nav class="nav"><div class="nav-label">MAIN MENU</div><a class="active" href="/">⌂ Dashboard</a><a href="/admin/">⚙ Administration</a><a href="/api/patients/">♙ Patients</a><a href="/api/appointments/">▣ Appointments</a><div class="nav-label">CLINICAL</div><a href="/api/encounters/">▤ Medical Records</a><a href="/api/beds/">▦ IPD & Beds</a><a href="/api/lab-reports/">⌁ Laboratory</a><a href="/api/medicines/">✚ Pharmacy</a><div class="nav-label">FINANCE</div><a href="/api/invoices/">₹ Billing & GST</a></nav></aside>
+    <main><header><div><h1>Good morning, Administrator</h1><p class="subtitle">Here is today’s hospital overview</p></div><div class="profile">● Admin Account ▾</div></header>
+      <section class="metrics"><div class="metric"><p>Appointments Today</p><strong>24</strong><span class="up">↑ 12% from yesterday</span></div><div class="metric"><p>Patients Admitted</p><strong>38</strong><span class="up">↑ 4 new admissions</span></div><div class="metric"><p>Bed Occupancy</p><strong>72%</strong><span class="up">86 of 120 beds occupied</span></div><div class="metric"><p>Today’s Revenue</p><strong>₹ 1.84L</strong><span class="up">↑ 9% from yesterday</span></div></section>
+      <div class="section"><h2>Quick Actions</h2><a href="/admin/"><button>Open Admin Panel</button></a></div>
+      <section class="actions"><a class="card action" href="/api/patients/"><span class="icon">♙</span><h3>Register Patient</h3><p>Create a new patient profile and QR identity.</p></a><a class="card action" href="/api/appointments/"><span class="icon">▣</span><h3>Book Appointment</h3><p>Schedule OPD consultation with a doctor.</p></a><a class="card action" href="/api/invoices/"><span class="icon">₹</span><h3>Create Invoice</h3><p>Generate billing with GST calculation.</p></a><a class="card action" href="/api/encounters/"><span class="icon">▤</span><h3>Medical Records</h3><p>Review and update patient EMR encounters.</p></a><a class="card action" href="/api/beds/"><span class="icon">▦</span><h3>Manage Beds</h3><p>Check live IPD ward availability.</p></a><a class="card action" href="/api/medicines/"><span class="icon">✚</span><h3>Pharmacy Stock</h3><p>Monitor medicines, batches, and expiry.</p></a></section>
+      <section class="bottom"><div class="card"><h3>Today’s Appointments</h3><div class="rows"><div class="row"><span class="time">09:30 AM</span><span class="patient"><strong>Anita Sharma</strong><br><small>Dr. Rahul Mehta · Cardiology</small></span><span class="badge">Confirmed</span></div><div class="row"><span class="time">10:15 AM</span><span class="patient"><strong>Rajesh Kumar</strong><br><small>Dr. Priya Nair · Orthopedics</small></span><span class="badge">Confirmed</span></div><div class="row"><span class="time">11:00 AM</span><span class="patient"><strong>Meera Patel</strong><br><small>Dr. Rahul Mehta · Cardiology</small></span><span class="badge">Waiting</span></div></div></div><div class="card"><h3>Attention Required</h3><div class="notice"><div class="notice-item"><span class="dot"></span><div><strong>Low pharmacy stock</strong><p>3 medicines are below their reorder level.</p></div></div><div class="notice-item"><span class="dot"></span><div><strong>Lab reports pending</strong><p>5 tests need technician review.</p></div></div><div class="notice-item"><span class="dot"></span><div><strong>Unpaid invoices</strong><p>8 invoices are pending payment today.</p></div></div></div></div></section>
+    </main>
+  </div>
+</body>
+</html>
