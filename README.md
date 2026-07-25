@@ -1,3 +1,61 @@
+# 🏥 Doctor Appointment System
+
+A full-featured Hospital Management System built with Django and Django REST Framework. The application provides secure patient management, doctor management, appointment scheduling, prescriptions, billing, reports, and an admin dashboard.
+
+## 🌐 Live Demo
+
+🔗 https://doctor-appointment-system-z8k5.onrender.com
+
+## 📌 GitHub Repository
+
+🔗 https://github.com/mayurkamane19/doctor-appointment-system
+
+## ✨ Features
+
+- 👨‍⚕️ Doctor Management
+- 🧑 Patient Management
+- 📅 Appointment Scheduling
+- 💊 Prescription Management
+- 🏥 Hospital Management
+- 💰 Billing & Payments
+- 📊 Reports & Dashboard
+- 🔐 Authentication & Role-Based Access Control (RBAC)
+- 📱 Responsive Admin Dashboard
+- 🚀 Production Deployment on Render
+
+## 🛠️ Tech Stack
+
+- Python
+- Django
+- Django REST Framework
+- SQLite / PostgreSQL
+- HTML5
+- CSS3
+- JavaScript
+- Gunicorn
+- WhiteNoise
+- Docker
+- Render
+
+## 🚀 Quick Start
+
+```bash
+git clone https://github.com/mayurkamane19/doctor-appointment-system.git
+
+cd doctor-appointment-system
+
+pip install -r requirements.txt
+
+python manage.py migrate
+
+python manage.py createsuperuser
+
+python manage.py runserver
+```
+
+---
+
+> **Note:** The detailed API documentation and additional setup instructions are available below in this README.
 # Hospital Management System API
 
 Secure Django hospital portal for RBAC, patient registration, OPD appointments, EMR encounters, nursing vitals, e-prescriptions, consents, IPD admissions/discharges/bed management, operation theatre schedules, GST invoices/payments, insurance claims, pharmacy inventory/procurement, laboratory orders/reports, notification tracking, audit logs, and dashboard reporting.
