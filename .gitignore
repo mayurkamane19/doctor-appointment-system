@@ -15,8 +15,9 @@ db.sqlite3
 # Environment Variables
 .env
 
-# Media Files
+# Media & Static Files
 media/
+staticfiles/
 
 # IDE
 .vscode/
