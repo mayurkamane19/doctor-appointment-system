@@ -1,87 +1,236 @@
 # 🏥 Doctor Appointment System
 
-A full-featured Hospital Management System built with Django and Django REST Framework. The application provides secure patient management, doctor management, appointment scheduling, prescriptions, billing, reports, and an admin dashboard.
+A full-featured **Hospital Management System** built using **Django** and **Django REST Framework**. The system streamlines hospital operations with secure patient management, doctor scheduling, appointments, prescriptions, billing, reports, authentication, and an advanced admin dashboard.
+
+---
 
 ## 🌐 Live Demo
 
-🔗 https://doctor-appointment-system-z8k5.onrender.com
+🔗 **Live Website:**  
+https://doctor-appointment-system-z8k5.onrender.com
 
-## 📌 GitHub Repository
+---
+
+## 📂 GitHub Repository
 
 🔗 https://github.com/mayurkamane19/doctor-appointment-system
+
+---
+
+## 📸 Screenshots
+
+> Add screenshots of your Home Page, Dashboard, Patient Management, Appointment Module, and Admin Panel here.
+
+---
 
 ## ✨ Features
 
 - 👨‍⚕️ Doctor Management
 - 🧑 Patient Management
 - 📅 Appointment Scheduling
+- 🏥 Hospital Administration
 - 💊 Prescription Management
-- 🏥 Hospital Management
+- 🩺 OPD & IPD Management
+- 🚑 Ambulance Management
+- 🛏 Bed Management
+- 🧪 Laboratory Reports
+- 💉 Blood Bank Management
 - 💰 Billing & Payments
-- 📊 Reports & Dashboard
-- 🔐 Authentication & Role-Based Access Control (RBAC)
+- 📊 Reports & Analytics
+- 🔔 Notification Management
+- 🔐 Authentication & Authorization (RBAC)
 - 📱 Responsive Admin Dashboard
 - 🚀 Production Deployment on Render
 
-## 🛠️ Tech Stack
+---
 
+## 🛠 Tech Stack
+
+### Backend
 - Python
 - Django
 - Django REST Framework
-- SQLite / PostgreSQL
+
+### Database
+- SQLite
+- PostgreSQL (Production Ready)
+
+### Frontend
 - HTML5
 - CSS3
 - JavaScript
+
+### Deployment
 - Gunicorn
 - WhiteNoise
 - Docker
 - Render
 
-## 🚀 Quick Start
+### Tools
+- Git
+- GitHub
+- VS Code
+
+---
+
+## 📁 Project Structure
+
+```
+doctor-appointment-system/
+│
+├── config/
+├── core/
+├── hospital/
+├── templates/
+├── nginx/
+├── manage.py
+├── requirements.txt
+├── Dockerfile
+├── docker-compose.yml
+├── render.yaml
+└── README.md
+```
+
+---
+
+## 🚀 Installation
+
+### Clone Repository
 
 ```bash
 git clone https://github.com/mayurkamane19/doctor-appointment-system.git
 
 cd doctor-appointment-system
+```
 
+### Create Virtual Environment
+
+```bash
+python -m venv venv
+```
+
+### Activate Virtual Environment
+
+#### Windows
+
+```bash
+venv\Scripts\activate
+```
+
+#### Linux / macOS
+
+```bash
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
+```
 
+### Apply Migrations
+
+```bash
 python manage.py migrate
+```
 
+### Create Superuser
+
+```bash
 python manage.py createsuperuser
+```
 
+### Run Development Server
+
+```bash
 python manage.py runserver
+```
+
+Open:
+
+```
+http://127.0.0.1:8000/
 ```
 
 ---
 
-> **Note:** The detailed API documentation and additional setup instructions are available below in this README.
-# Hospital Management System API
+## 🔑 Admin Panel
 
-Secure Django hospital portal for RBAC, patient registration, OPD appointments, EMR encounters, nursing vitals, e-prescriptions, consents, IPD admissions/discharges/bed management, operation theatre schedules, GST invoices/payments, insurance claims, pharmacy inventory/procurement, laboratory orders/reports, notification tracking, audit logs, and dashboard reporting.
+```
+http://127.0.0.1:8000/admin/
+```
 
-## Start locally
+Create an administrator account using:
 
-1. Create a virtual environment and run `pip install -r requirements.txt`.
-2. Copy `.env.example` to `.env`; use SQLite initially or configure PostgreSQL.
-3. Run `python manage.py makemigrations hospital`, `python manage.py migrate`, then `python manage.py createsuperuser`.
-4. Start with `python manage.py runserver` and obtain a JWT from `POST /api/auth/token/`.
+```bash
+python manage.py createsuperuser
+```
 
-## Demo portal
+---
 
-Run `python manage.py seed_demo_data`, then sign in at `http://127.0.0.1:8000/` with `admin` / `Hospital@12345`. The staff portal provides searchable create, update, and delete screens for every core module.
+## 🔐 Authentication
 
-For containers, set unique secrets in `docker-compose.yml`, then run `docker compose up --build`. Nginx serves the API at port 80; terminate TLS at a managed load balancer or extend the Nginx configuration with your certificate.
+- JWT Authentication
+- Role-Based Access Control (RBAC)
+- Django Authentication System
 
-## Production requirements still needed
+---
 
-- A React/Angular patient and staff portal connected to these APIs.
-- SMS/WhatsApp/email provider, payment gateway, and GST invoice PDF template. The portal tracks these workflows; sending payments/messages needs provider credentials and implementation.
-- Object storage with encrypted backups; antivirus scanning for uploaded reports.
-- Consent tracking, retention/deletion rules, break-glass access, and local legal/privacy review (DPDP Act plus applicable state/clinical regulations).
-- Monitoring, alerting, disaster-recovery drills, rate limiting, vulnerability scanning, and a managed TLS certificate behind Nginx/load balancer.
-- Interoperability integrations: HL7/FHIR, LIS/RIS/PACS, insurance/TPA, biometric attendance, and barcode printer/scanner workflows.
+## 🌍 Deployment
 
-## Important
+The project is successfully deployed on **Render** using:
 
-This starter is not certified for clinical deployment. Have a security professional and local healthcare/legal compliance team assess it before handling real patient data.
+- Gunicorn
+- WhiteNoise
+- Docker
+- Environment Variables
+- Automatic Database Migrations
+
+---
+
+## 📌 Future Improvements
+
+- Patient Portal
+- Doctor Portal
+- Online Payment Gateway
+- SMS & Email Notifications
+- WhatsApp Integration
+- Video Consultation
+- AI Chatbot
+- Appointment Reminders
+- Medical Report Upload
+- Dashboard Analytics
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome.
+
+1. Fork the repository.
+2. Create a feature branch.
+3. Commit your changes.
+4. Push your branch.
+5. Open a Pull Request.
+
+---
+
+## 👨‍💻 Author
+
+**Mayur Kamane**
+
+- GitHub: https://github.com/mayurkamane19
+- LinkedIn: https://www.linkedin.com/in/mayurkamane19
+
+---
+
+## ⭐ Support
+
+If you found this project useful, please consider giving it a ⭐ on GitHub.
+
+---
+
+## 📄 License
+
+This project is created for educational and portfolio purposes.
